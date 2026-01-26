@@ -33,9 +33,9 @@ export function getBounds(points: Cartesian2[]): number[] {
 }
 
 /**
- * 格式化显示长度
- * @param length 单位米
- * @param unit 目标单位
+ * Format length display
+ * @param length in meters
+ * @param unit target unit
  */
 export function formatLength(
   length: number,
@@ -49,9 +49,9 @@ export function formatLength(
 }
 
 /**
- * 格式化显示面积
- * @param area 单位米
- * @param unit 目标单位
+ * Format area display
+ * @param area in square meters
+ * @param unit target unit
  */
 export function formatArea(
   area: number,

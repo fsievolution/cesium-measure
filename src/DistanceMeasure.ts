@@ -6,7 +6,7 @@ import Measure from "./Measure";
 import type { PolylineGraphics } from "cesium";
 
 /**
- * 距离测量类
+ * Distance measurement class
  */
 class DistanceMeasure extends Measure {
   protected _updateLabelFunc(positions: Cartesian3[]) {
@@ -22,10 +22,10 @@ class DistanceMeasure extends Measure {
   }
 
   /**
-   * 计算两点之间的距离
-   * @param {Cartesian3} start 点位1
-   * @param {Cartesian3} end 点位2
-   * @returns {number} 距离/米
+   * Calculate distance between two points
+   * @param {Cartesian3} start position 1
+   * @param {Cartesian3} end position 2
+   * @returns {number} distance in meters
    */
   getDistance(start: Cartesian3, end: Cartesian3): number {
     return Cartesian3.distance(start, end);

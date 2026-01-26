@@ -16,15 +16,15 @@ import type { Cartesian3, Viewer } from 'cesium';
 import type { MeasureOptions } from './Measure';
 
 /**
- * 贴地面积量算类
+ * Surface area measurement class
  */
 class AreaSurfaceMeasure extends AreaMeasure {
   private _splitNum: number;
 
   /**
-   * 贴地面积量算构造函数
+   * Surface area measurement constructor
    * @param viewer
-   * @param [options.splitNum = 10] 插值数，将面分割的网格数, 默认为10
+   * @param [options.splitNum = 10] Interpolation count, number of grid cells to split the area into, default is 10
    */
   constructor(
     viewer: Viewer,
@@ -67,8 +67,8 @@ class AreaSurfaceMeasure extends AreaMeasure {
     const x: number[] = [0];
     const y: number[] = [0];
     const geodesic = new EllipsoidGeodesic();
-    const radiansPerDegree = Math.PI / 180.0; //角度转化为弧度(rad)
-    //数组x,y分别按顺序存储各点的横、纵坐标值
+    const radiansPerDegree = Math.PI / 180.0; // Convert degrees to radians (rad)
+    // Arrays x,y store the horizontal and vertical coordinates of each point in order
     for (let i = 0; i < positions.length - 1; i += 1) {
       const p1 = positions[i];
       const p2 = positions[i + 1];
@@ -129,9 +129,9 @@ class AreaSurfaceMeasure extends AreaMeasure {
   }
 
   /**
-   * 计算贴地的多边形面积
-   * @param {Cartesian3[]} positions 点位
-   * @returns {number} 面积/平方米
+   * Calculate surface polygon area
+   * @param {Cartesian3[]} positions positions
+   * @returns {number} area in square meters
    */
   getArea(positions: Cartesian3[]): number {
     return this._calculateSurfaceArea(

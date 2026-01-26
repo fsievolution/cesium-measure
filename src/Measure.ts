@@ -23,9 +23,9 @@ export type MeasureLocaleOptions = {
   total: string;
   area: string;
   /**
-   * 格式化显示长度
-   * @param length 单位米
-   * @param unit 目标单位
+   * Format length display
+   * @param length in meters
+   * @param unit target unit
    */
   formatLength(
     length: number,
@@ -33,9 +33,9 @@ export type MeasureLocaleOptions = {
     unit: MeasureUnits,
   ): string;
   /**
-   * 格式化显示面积
-   * @param area 单位米
-   * @param unit 目标单位
+   * Format area display
+   * @param area in square meters
+   * @param unit target unit
    */
   formatArea(area: number, unitedArea: number, unit: MeasureUnits): string;
 };
@@ -61,20 +61,20 @@ export type MeasureOptions = {
   /**
    * @example
    * {
-        start: '起点',
-        area: '面积',
-        total: '总计',
+        start: 'Start',
+        area: 'Area',
+        total: 'Total',
         formatLength: (length, unitedLength) => {
           if (length < 1000) {
-            return length + '米';
+            return length + ' meters';
           }
-          return unitedLength + '千米';
+          return unitedLength + ' kilometers';
         },
         formatArea: (area, unitedArea) => {
           if (area < 1000000) {
-            return area + '平方米';
+            return area + ' square meters';
           }
-          return unitedArea + '平方千米';
+          return unitedArea + ' square kilometers';
         }
       }
    */
@@ -112,9 +112,9 @@ export default class Measure {
   private _onEnd: ((entity: Entity) => void) | undefined;
 
   /**
-   * 量算工具
+   * Measurement tool
    * @param viewer
-   * @param {MeasureOptions['locale']} [options.locale] 绘制时的提示信息
+   * @param {MeasureOptions['locale']} [options.locale] Tooltip messages during drawing
    */
   constructor(viewer: Viewer, options: MeasureOptions = {}) {
     if (!viewer) throw new Error("undefined viewer");
@@ -153,14 +153,14 @@ export default class Measure {
   }
 
   /**
-   * @return {boolean} 返回量算工具是否已销毁
+   * @return {boolean} Returns whether the measurement tool has been destroyed
    */
   get destroyed() {
     return this._status === "DESTROY";
   }
 
   /**
-   * 根据传入的坐标信息更新标签
+   * Update labels based on input coordinates
    * @param {Cartesian3[]} positions
    */
 
@@ -179,9 +179,9 @@ export default class Measure {
   start() {}
 
   /**
-   * 开始绘制
-   * @param {string} type 绘制图形类型
-   * @param {boolean} clampToGround 是否贴地
+   * Start drawing
+   * @param {string} type Drawing shape type
+   * @param {boolean} clampToGround Whether to clamp to ground
    */
   protected _start(
     type: "POLYGON" | "POLYLINE" | "POINT" | "CIRCLE" | "RECTANGLE",
@@ -211,7 +211,7 @@ export default class Measure {
   }
 
   /**
-   * 清除测量结果,重置绘制
+   * Clear measurement results, reset drawing
    */
   end() {
     this.drawer.reset();

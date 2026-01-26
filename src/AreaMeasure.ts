@@ -9,7 +9,7 @@ import area from '@turf/area';
 import type { PolygonGraphics } from 'cesium';
 
 /**
- * 距离测量类
+ * Area measurement class
  */
 class AreaMeasure extends Measure {
   protected _updateLabelFunc(positions: Cartesian3[]) {
@@ -29,9 +29,9 @@ class AreaMeasure extends Measure {
   }
 
   /**
-   * 计算多边形面积
-   * @param {Cartesian3[]} positions 点位
-   * @returns {number} 面积/平方米
+   * Calculate polygon area
+   * @param {Cartesian3[]} positions positions
+   * @returns {number} area in square meters
    */
   getArea(positions: Cartesian3[]): number {
     const lonlats = this._cartesian2Lonlat(positions);

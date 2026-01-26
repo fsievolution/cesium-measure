@@ -12,7 +12,7 @@ import type { Cartesian3, PolylineGraphics, Viewer } from 'cesium';
 import type { MeasureOptions } from './Measure';
 
 /**
- * 贴地距离测量类
+ * Surface distance measurement class
  */
 class DistanceSurfaceMeasure extends DistanceMeasure {
   private _splitNum: number;
@@ -27,10 +27,10 @@ class DistanceSurfaceMeasure extends DistanceMeasure {
     this._splitNum = options.splitNum ?? 100;
   }
   /**
-   * 计算线段的表面距离
-   * @param startPoint  -线段起点的屏幕坐标
-   * @param endPoint    -线段终点的屏幕坐标
-   * @returns 表面距离
+   * Calculate surface distance of a line segment
+   * @param startPoint - screen coordinates of line segment start point
+   * @param endPoint - screen coordinates of line segment end point
+   * @returns surface distance
    */
   private _calculateSurfaceDistance(
     startPoint: Cartesian2,
@@ -61,10 +61,10 @@ class DistanceSurfaceMeasure extends DistanceMeasure {
   }
 
   /**
-   * 计算细分后的，每一小段的笛卡尔坐标距离（也就是大地坐标系距离）
-   * @param startPoint -每一段线段起点
-   * @param endPoint -每一段线段终点
-   * @returns 表面距离
+   * Calculate the Cartesian coordinate distance of each subdivided segment (geodetic distance)
+   * @param startPoint - start point of each segment
+   * @param endPoint - end point of each segment
+   * @returns surface distance
    */
   private _calculateDetailSurfaceLength(
     startPoint: Cartesian2,
@@ -90,11 +90,11 @@ class DistanceSurfaceMeasure extends DistanceMeasure {
   }
 
   /**
-   * 获取线段上距起点一定距离出的线上点坐标（屏幕坐标）
-   * @param startPosition  -线段起点（屏幕坐标）
-   * @param endPosition -线段终点（屏幕坐标）
-   * @param interval -距起点距离
-   * @returns -结果坐标（屏幕坐标）
+   * Get coordinates of a point on the line at a certain distance from the start point (screen coordinates)
+   * @param startPosition - line segment start point (screen coordinates)
+   * @param endPosition - line segment end point (screen coordinates)
+   * @param interval - distance from start point
+   * @returns - result coordinates (screen coordinates)
    */
   private _findWindowPositionByPixelInterval(
     startPosition: Cartesian2,
