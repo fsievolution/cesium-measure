@@ -1,7 +1,7 @@
 import { HeightReference, NearFarScalar, Cartesian2, LabelStyle, Color, LabelCollection, Math as Math$1, Cartesian3, EllipsoidGeodesic, Cartographic, SceneTransforms } from 'cesium';
 import { polygon, convertArea, convertLength } from '@turf/helpers';
-import { MouseTooltip } from '@cesium-extends/tooltip';
 import Drawer from '@cesium-extends/drawer';
+import { MouseTooltip } from '@cesium-extends/tooltip';
 import area from '@turf/area';
 import intersect from '@turf/intersect';
 import { randomPoint } from '@turf/random';
@@ -60,9 +60,9 @@ class Measure {
   drawer;
   _onEnd;
   /**
-   * 量算工具
+   * Measurement tool
    * @param viewer
-   * @param {MeasureOptions['locale']} [options.locale] 绘制时的提示信息
+   * @param {MeasureOptions['locale']} [options.locale] Tooltip messages during drawing
    */
   constructor(viewer, options = {}) {
     var _a;
@@ -97,13 +97,13 @@ class Measure {
     this._status = "INIT";
   }
   /**
-   * @return {boolean} 返回量算工具是否已销毁
+   * @return {boolean} Returns whether the measurement tool has been destroyed
    */
   get destroyed() {
     return this._status === "DESTROY";
   }
   /**
-   * 根据传入的坐标信息更新标签
+   * Update labels based on input coordinates
    * @param {Cartesian3[]} positions
    */
   _updateLabelFunc(positions) {
@@ -119,9 +119,9 @@ class Measure {
   start() {
   }
   /**
-   * 开始绘制
-   * @param {string} type 绘制图形类型
-   * @param {boolean} clampToGround 是否贴地
+   * Start drawing
+   * @param {string} type Drawing shape type
+   * @param {boolean} clampToGround Whether to clamp to ground
    */
   _start(type, options) {
     const { style, clampToGround } = options ?? {};
@@ -143,7 +143,7 @@ class Measure {
     this._status = "WORKING";
   }
   /**
-   * 清除测量结果,重置绘制
+   * Clear measurement results, reset drawing
    */
   end() {
     this.drawer.reset();
@@ -178,9 +178,9 @@ class AreaMeasure extends Measure {
     this._updateLabelTexts(positions);
   }
   /**
-   * 计算多边形面积
-   * @param {Cartesian3[]} positions 点位
-   * @returns {number} 面积/平方米
+   * Calculate polygon area
+   * @param {Cartesian3[]} positions positions
+   * @returns {number} area in square meters
    */
   getArea(positions) {
     const lonlats = this._cartesian2Lonlat(positions);
@@ -212,9 +212,9 @@ class AreaMeasure extends Measure {
 class AreaSurfaceMeasure extends AreaMeasure {
   _splitNum;
   /**
-   * 贴地面积量算构造函数
+   * Surface area measurement constructor
    * @param viewer
-   * @param [options.splitNum = 10] 插值数，将面分割的网格数, 默认为10
+   * @param [options.splitNum = 10] Interpolation count, number of grid cells to split the area into, default is 10
    */
   constructor(viewer, options = {}) {
     super(viewer, options);
@@ -302,9 +302,9 @@ class AreaSurfaceMeasure extends AreaMeasure {
     );
   }
   /**
-   * 计算贴地的多边形面积
-   * @param {Cartesian3[]} positions 点位
-   * @returns {number} 面积/平方米
+   * Calculate surface polygon area
+   * @param {Cartesian3[]} positions positions
+   * @returns {number} area in square meters
    */
   getArea(positions) {
     return this._calculateSurfaceArea(
@@ -328,10 +328,10 @@ class DistanceMeasure extends Measure {
     this._updateLabelTexts(positions);
   }
   /**
-   * 计算两点之间的距离
-   * @param {Cartesian3} start 点位1
-   * @param {Cartesian3} end 点位2
-   * @returns {number} 距离/米
+   * Calculate distance between two points
+   * @param {Cartesian3} start position 1
+   * @param {Cartesian3} end position 2
+   * @returns {number} distance in meters
    */
   getDistance(start, end) {
     return Cartesian3.distance(start, end);
@@ -418,10 +418,10 @@ class DistanceSurfaceMeasure extends DistanceMeasure {
     this._splitNum = options.splitNum ?? 100;
   }
   /**
-   * 计算线段的表面距离
-   * @param startPoint  -线段起点的屏幕坐标
-   * @param endPoint    -线段终点的屏幕坐标
-   * @returns 表面距离
+   * Calculate surface distance of a line segment
+   * @param startPoint - screen coordinates of line segment start point
+   * @param endPoint - screen coordinates of line segment end point
+   * @returns surface distance
    */
   _calculateSurfaceDistance(startPoint, endPoint) {
     let resultDistance = 0;
@@ -447,10 +447,10 @@ class DistanceSurfaceMeasure extends DistanceMeasure {
     return resultDistance;
   }
   /**
-   * 计算细分后的，每一小段的笛卡尔坐标距离（也就是大地坐标系距离）
-   * @param startPoint -每一段线段起点
-   * @param endPoint -每一段线段终点
-   * @returns 表面距离
+   * Calculate the Cartesian coordinate distance of each subdivided segment (geodetic distance)
+   * @param startPoint - start point of each segment
+   * @param endPoint - end point of each segment
+   * @returns surface distance
    */
   _calculateDetailSurfaceLength(startPoint, endPoint) {
     let innerS = 0;
@@ -471,11 +471,11 @@ class DistanceSurfaceMeasure extends DistanceMeasure {
     return innerS;
   }
   /**
-   * 获取线段上距起点一定距离出的线上点坐标（屏幕坐标）
-   * @param startPosition  -线段起点（屏幕坐标）
-   * @param endPosition -线段终点（屏幕坐标）
-   * @param interval -距起点距离
-   * @returns -结果坐标（屏幕坐标）
+   * Get coordinates of a point on the line at a certain distance from the start point (screen coordinates)
+   * @param startPosition - line segment start point (screen coordinates)
+   * @param endPosition - line segment end point (screen coordinates)
+   * @param interval - distance from start point
+   * @returns - result coordinates (screen coordinates)
    */
   _findWindowPositionByPixelInterval(startPosition, endPosition, interval) {
     const result = new Cartesian2(0, 0);

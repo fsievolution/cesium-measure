@@ -1,6 +1,6 @@
 import { Viewer, LabelCollection, Color, Cartesian2, LabelStyle, NearFarScalar, HeightReference, Entity, Cartesian3, PolygonGraphics, PolylineGraphics } from 'cesium';
-import { MouseTooltip } from '@cesium-extends/tooltip';
 import Drawer, { DrawOption } from '@cesium-extends/drawer';
+import { MouseTooltip } from '@cesium-extends/tooltip';
 import { Units } from '@turf/helpers';
 
 type MeasureUnits = Units;
@@ -9,15 +9,15 @@ type MeasureLocaleOptions = {
     total: string;
     area: string;
     /**
-     * 格式化显示长度
-     * @param length 单位米
-     * @param unit 目标单位
+     * Format length display
+     * @param length in meters
+     * @param unit target unit
      */
     formatLength(length: number, unitedLength: number, unit: MeasureUnits): string;
     /**
-     * 格式化显示面积
-     * @param area 单位米
-     * @param unit 目标单位
+     * Format area display
+     * @param area in square meters
+     * @param unit target unit
      */
     formatArea(area: number, unitedArea: number, unit: MeasureUnits): string;
 };
@@ -33,6 +33,7 @@ type MeasureOptions = {
         scale?: number;
         scaleByDistance?: NearFarScalar;
         heightReference?: HeightReference;
+        disableDepthTestDistance?: number;
     };
     /** defaults to kilometers */
     units?: MeasureUnits;
@@ -42,20 +43,20 @@ type MeasureOptions = {
     /**
      * @example
      * {
-          start: '起点',
-          area: '面积',
-          total: '总计',
+          start: 'Start',
+          area: 'Area',
+          total: 'Total',
           formatLength: (length, unitedLength) => {
             if (length < 1000) {
-              return length + '米';
+              return length + ' meters';
             }
-            return unitedLength + '千米';
+            return unitedLength + ' kilometers';
           },
           formatArea: (area, unitedArea) => {
             if (area < 1000000) {
-              return area + '平方米';
+              return area + ' square meters';
             }
-            return unitedArea + '平方千米';
+            return unitedArea + ' square kilometers';
           }
         }
      */
@@ -74,47 +75,47 @@ declare class Measure {
     drawer: Drawer;
     private _onEnd;
     /**
-     * 量算工具
+     * Measurement tool
      * @param viewer
-     * @param {MeasureOptions['locale']} [options.locale] 绘制时的提示信息
+     * @param {MeasureOptions['locale']} [options.locale] Tooltip messages during drawing
      */
     constructor(viewer: Viewer, options?: MeasureOptions);
     /**
-     * @return {boolean} 返回量算工具是否已销毁
+     * @return {boolean} Returns whether the measurement tool has been destroyed
      */
     get destroyed(): boolean;
     /**
-     * 根据传入的坐标信息更新标签
+     * Update labels based on input coordinates
      * @param {Cartesian3[]} positions
      */
     protected _updateLabelFunc(positions: Cartesian3[]): void;
     protected _cartesian2Lonlat(positions: Cartesian3[]): number[][];
     start(): void;
     /**
-     * 开始绘制
-     * @param {string} type 绘制图形类型
-     * @param {boolean} clampToGround 是否贴地
+     * Start drawing
+     * @param {string} type Drawing shape type
+     * @param {boolean} clampToGround Whether to clamp to ground
      */
     protected _start(type: "POLYGON" | "POLYLINE" | "POINT" | "CIRCLE" | "RECTANGLE", options?: {
         style?: object;
         clampToGround?: boolean;
     }): void;
     /**
-     * 清除测量结果,重置绘制
+     * Clear measurement results, reset drawing
      */
     end(): void;
     destroy(): void;
 }
 
 /**
- * 距离测量类
+ * Area measurement class
  */
 declare class AreaMeasure extends Measure {
     protected _updateLabelFunc(positions: Cartesian3[]): void;
     /**
-     * 计算多边形面积
-     * @param {Cartesian3[]} positions 点位
-     * @returns {number} 面积/平方米
+     * Calculate polygon area
+     * @param {Cartesian3[]} positions positions
+     * @returns {number} area in square meters
      */
     getArea(positions: Cartesian3[]): number;
     protected _updateLabelTexts(positions: Cartesian3[]): void;
@@ -123,14 +124,14 @@ declare class AreaMeasure extends Measure {
 }
 
 /**
- * 贴地面积量算类
+ * Surface area measurement class
  */
 declare class AreaSurfaceMeasure extends AreaMeasure {
     private _splitNum;
     /**
-     * 贴地面积量算构造函数
+     * Surface area measurement constructor
      * @param viewer
-     * @param [options.splitNum = 10] 插值数，将面分割的网格数, 默认为10
+     * @param [options.splitNum = 10] Interpolation count, number of grid cells to split the area into, default is 10
      */
     constructor(viewer: Viewer, options?: MeasureOptions & {
         splitNum?: number;
@@ -142,23 +143,23 @@ declare class AreaSurfaceMeasure extends AreaMeasure {
     private _intersect;
     private _turfPloygon2CartesianArr;
     /**
-     * 计算贴地的多边形面积
-     * @param {Cartesian3[]} positions 点位
-     * @returns {number} 面积/平方米
+     * Calculate surface polygon area
+     * @param {Cartesian3[]} positions positions
+     * @returns {number} area in square meters
      */
     getArea(positions: Cartesian3[]): number;
 }
 
 /**
- * 距离测量类
+ * Distance measurement class
  */
 declare class DistanceMeasure extends Measure {
     protected _updateLabelFunc(positions: Cartesian3[]): void;
     /**
-     * 计算两点之间的距离
-     * @param {Cartesian3} start 点位1
-     * @param {Cartesian3} end 点位2
-     * @returns {number} 距离/米
+     * Calculate distance between two points
+     * @param {Cartesian3} start position 1
+     * @param {Cartesian3} end position 2
+     * @returns {number} distance in meters
      */
     getDistance(start: Cartesian3, end: Cartesian3): number;
     getCart3AxisDistance(start: Cartesian3, end: Cartesian3): Cartesian3;
@@ -168,7 +169,7 @@ declare class DistanceMeasure extends Measure {
 }
 
 /**
- * 贴地距离测量类
+ * Surface distance measurement class
  */
 declare class DistanceSurfaceMeasure extends DistanceMeasure {
     private _splitNum;
@@ -176,25 +177,25 @@ declare class DistanceSurfaceMeasure extends DistanceMeasure {
         splitNum?: number;
     });
     /**
-     * 计算线段的表面距离
-     * @param startPoint  -线段起点的屏幕坐标
-     * @param endPoint    -线段终点的屏幕坐标
-     * @returns 表面距离
+     * Calculate surface distance of a line segment
+     * @param startPoint - screen coordinates of line segment start point
+     * @param endPoint - screen coordinates of line segment end point
+     * @returns surface distance
      */
     private _calculateSurfaceDistance;
     /**
-     * 计算细分后的，每一小段的笛卡尔坐标距离（也就是大地坐标系距离）
-     * @param startPoint -每一段线段起点
-     * @param endPoint -每一段线段终点
-     * @returns 表面距离
+     * Calculate the Cartesian coordinate distance of each subdivided segment (geodetic distance)
+     * @param startPoint - start point of each segment
+     * @param endPoint - end point of each segment
+     * @returns surface distance
      */
     private _calculateDetailSurfaceLength;
     /**
-     * 获取线段上距起点一定距离出的线上点坐标（屏幕坐标）
-     * @param startPosition  -线段起点（屏幕坐标）
-     * @param endPosition -线段终点（屏幕坐标）
-     * @param interval -距起点距离
-     * @returns -结果坐标（屏幕坐标）
+     * Get coordinates of a point on the line at a certain distance from the start point (screen coordinates)
+     * @param startPosition - line segment start point (screen coordinates)
+     * @param endPosition - line segment end point (screen coordinates)
+     * @param interval - distance from start point
+     * @returns - result coordinates (screen coordinates)
      */
     private _findWindowPositionByPixelInterval;
     getDistance(pos1: Cartesian3, pos2: Cartesian3): number;

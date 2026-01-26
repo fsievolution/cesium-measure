@@ -1,19 +1,17 @@
-import {
-  Cartesian2,
-  Color,
-  LabelCollection,
-  LabelStyle,
-  Math as CMath,
-  NearFarScalar,
-  HeightReference,
-} from "cesium";
-
-import { MouseTooltip } from "@cesium-extends/tooltip";
+import type { DrawOption } from "@cesium-extends/drawer";
 import Drawer from "@cesium-extends/drawer";
-
+import { MouseTooltip } from "@cesium-extends/tooltip";
 import type { Units } from "@turf/helpers";
 import type { Cartesian3, Entity, Viewer } from "cesium";
-import type { DrawOption } from "@cesium-extends/drawer";
+import {
+  Cartesian2,
+  Math as CMath,
+  Color,
+  HeightReference,
+  LabelCollection,
+  LabelStyle,
+  NearFarScalar,
+} from "cesium";
 import { formatArea, formatLength } from "./utils";
 
 export type MeasureUnits = Units;
@@ -52,6 +50,7 @@ export type MeasureOptions = {
     scale?: number;
     scaleByDistance?: NearFarScalar;
     heightReference?: HeightReference;
+    disableDepthTestDistance?: number;
   };
   /** defaults to kilometers */
   units?: MeasureUnits;
